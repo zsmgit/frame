@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mutiple_tables.mapping.BlogMapper">
+    <select id="findBlogs" resultMap="blogResultMap">
+       SELECT
+       b.id,
+       b.tittle,
+       a.id,
+       a.name,
+       a.password,
+       p.id,
+       p.tittle,
+       p.content
+       FROM blog b
+       LEFT JOIN author a ON b.author_id = a.id
+       LEFT JOIN post p ON b.id = p.blog_id
+    </select>
+    <!--属性名和字段一致,resultMap可以 autoMapping="true"-->
+    <resultMap id="blogResultMap" type="blog">
+        <id property="id" column="id"/>
+        <result property="tittle" column="tittle"/>
+        <!--association  javaType-->
+        <association property="author" javaType="author">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="password" column="password"/>
+        </association>
+        <!--collection  ofType-->
+        <collection property="posts" ofType="post">
+            <id property="id" column="id"/>
+            <result property="tittle" column="tittle"/>
+            <result property="content" column="content"/>
+        </collection>
+    </resultMap>
+    <!--<collection property="posts" ofType="Post">-->
+        <!--<id property="id" column="post_id"/>-->
+        <!--<result property="subject" column="post_subject"/>-->
+        <!--<association property="author" javaType="Author"/>-->
+        <!--<collection property="comments" ofType="Comment">-->
+            <!--<id property="id" column="comment_id"/>-->
+        <!--</collection>-->
+        <!--<collection property="tags" ofType="Tag" >-->
+            <!--<id property="id" column="tag_id"/>-->
+        <!--</collection>-->
+        <!--<discriminator javaType="int" column="draft">-->
+            <!--<case value="1" resultType="DraftPost"/>-->
+        <!--</discriminator>-->
+    <!--</collection>-->
+</mapper>
