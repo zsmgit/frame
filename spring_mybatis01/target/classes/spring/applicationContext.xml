@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--配置 SqlSessionFactory，以及数据源-->
+
+    <!--加载连接池配置信息-->
+    <!--Access denied for user 'Administrator'@'localhost' (using password: YES)-->
+    <!--ystem-properties-mode属性 properties文件中的username是否被系统同名属性覆盖 FALLBACK：默认值，不存在时覆盖。NEVER：不覆盖，OVERRIDE： 覆盖-->
+    <context:property-placeholder location="classpath:jdbc.properties" system-properties-mode="NEVER"/>
+
+    <!--配置连接池-->
+    <bean id="dataSource" class="${dataSource}" destroy-method="close">
+        <property name="driverClassName" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+        <property name="maxTotal" value="10"/>
+        <property name="maxIdle" value="5"/>
+    </bean>
+
+    <!-- 配置sqlSessionFactory    由spring管理-->
+    <!--SqlSessionFactoryBean是用来产生sqlSessionFactory的 -->
+    <!--注入数据源-->
+    <!--加载mybatis配置文件-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="mybatis/mybatis-config.xml"/>
+    </bean>
+
+    <!-- MapperFactoryBean：根据mapper接口生成的代理对象 -->
+    <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cn.su.mapper.UserMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+
+</beans>

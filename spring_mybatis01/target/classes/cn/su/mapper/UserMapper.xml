@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace和接口全限定名相同-->
+<!--id和接口的方法名相同，参数，返回值类型相同-->
+<!--resultType在mybatis-config.xml中扫描包别名-->
+<mapper namespace="cn.su.mapper.UserMapper">
+    <select id="getUserById" parameterType="string" resultType="user">
+        SELECT * FROM user WHERE id=#{id}
+    </select>
+</mapper>
